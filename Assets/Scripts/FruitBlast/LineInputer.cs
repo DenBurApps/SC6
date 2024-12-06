@@ -11,6 +11,7 @@ namespace FruitBlast
         [SerializeField] private Button _minusButton;
         [SerializeField] private TMP_Text _currentLineText;
         [SerializeField] private LineHolder _lineHolder;
+        [SerializeField] private DessertParade.LineHolder _dplineHolder;
 
         private int _minLines = 1;
 
@@ -18,41 +19,78 @@ namespace FruitBlast
         {
             _plusButton.onClick.AddListener(IncreaseLine);
             _minusButton.onClick.AddListener(DecreaseLine);
-            _lineHolder.AllLinesDisabled += UpdateLineDisplay;
+
+            if (_lineHolder != null)
+                _lineHolder.AllLinesDisabled += UpdateLineDisplay;
+
+            if (_dplineHolder != null)
+                _dplineHolder.AllLinesDisabled += UpdateLineDisplay;
         }
 
         private void OnDisable()
         {
             _plusButton.onClick.RemoveListener(IncreaseLine);
             _minusButton.onClick.RemoveListener(DecreaseLine);
-            _lineHolder.AllLinesDisabled -= UpdateLineDisplay;
+
+            if (_lineHolder != null)
+                _lineHolder.AllLinesDisabled -= UpdateLineDisplay;
+
+            if (_dplineHolder != null)
+                _dplineHolder.AllLinesDisabled -= UpdateLineDisplay;
         }
 
         private void IncreaseLine()
         {
-            _lineHolder.EnableLine();
+            if (_lineHolder != null)
+                _lineHolder.EnableLine();
+
+            if (_dplineHolder != null)
+                _dplineHolder.EnableLine();
+
             UpdateLineDisplay();
             ToggleButtons();
         }
 
         private void DecreaseLine()
         {
-            _lineHolder.DisableLine();
+            if (_lineHolder != null)
+                _lineHolder.DisableLine();
+
+            if (_dplineHolder != null)
+                _dplineHolder.DisableLine();
+
             UpdateLineDisplay();
             ToggleButtons();
         }
 
         private void UpdateLineDisplay()
         {
-            _currentLineText.text = _lineHolder.GetCurrentActiveLinesCount().ToString();
+            if (_lineHolder != null)
+                _currentLineText.text = _lineHolder.GetCurrentActiveLinesCount().ToString();
+
+            if (_dplineHolder != null)
+                _currentLineText.text = _dplineHolder.GetCurrentActiveLinesCount().ToString();
+
             ToggleButtons();
         }
 
         private void ToggleButtons()
         {
-            int activeLines = _lineHolder.GetCurrentActiveLinesCount();
-            _plusButton.interactable = activeLines < _lineHolder.LinesCount;
-            _minusButton.interactable = activeLines > _minLines; 
+            int activeLines = 0;
+
+            if (_lineHolder != null)
+            {
+                activeLines = _lineHolder.GetCurrentActiveLinesCount();
+                _plusButton.interactable = activeLines < _lineHolder.LinesCount;
+            }
+
+            if (_dplineHolder != null)
+            {
+                activeLines = _dplineHolder.GetCurrentActiveLinesCount();
+                _plusButton.interactable = activeLines < _dplineHolder.LinesCount;
+            }
+            
+            _minusButton.interactable = activeLines > _minLines;
         }
     }
 }

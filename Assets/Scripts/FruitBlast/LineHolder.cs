@@ -40,6 +40,33 @@ namespace FruitBlast
             }
         }
 
+        public void HighligthLine(int index)
+        {
+            if (index <= 3 && index < _lines.Length)
+            {
+                _lines[index].color = _selectedHorizontalColor;
+            }
+            else if(index >= 4 && index < _lines.Length)
+            {
+                _lines[index].sprite = _selectedVerticalSprite;
+            }
+        }
+
+        public void ReturnAllLinesToDefault()
+        {
+            for (int i = 0; i < _lines.Length; i++)
+            {
+                if (i <= 3 && i < _lines.Length)
+                {
+                    _lines[i].color = _notSelectedHorizontalColor;
+                }
+                else if(i >= 4 && i < _lines.Length)
+                {
+                    _lines[i].sprite = _defaultVerticalSprite;
+                }
+            }
+        }
+
         public void DisableLine()
         {
             for (int i = _lines.Length - 1; i > 0; i--)

@@ -10,21 +10,34 @@ namespace FruitBlast
 {
     public class SlotReel : MonoBehaviour
     {
-        [SerializeField] private List<FruitHolder> _fruitHolders;
+        [SerializeField] private List<ItemHolder> _fruitHolders;
         [SerializeField] private float _spinSpeed = 500f;
         [SerializeField] private float _spinDuration = 2f;
-        [SerializeField] private List<Fruit> _fruits;
+        [SerializeField] private List<Item> _fruits;
         [SerializeField] private BetterAxisAlignedLayoutGroup _group;
-        
-        private List<Fruit> _finalResult;
+
+        private List<Item> _finalResult;
         public event Action StartSpinning;
         public event Action StoppedSpinning;
+
+        private void Start()
+        {
+            DisableAllStars();
+        }
 
         public void SpinReel()
         {
             _finalResult = GenerateRandomResults();
 
             StartCoroutine(SpinCoroutine());
+        }
+
+        public void DisableAllStars()
+        {
+            foreach (var fruitHolder in _fruitHolders)
+            {
+                fruitHolder.ToggleStar(false);
+            }
         }
 
         private IEnumerator SpinCoroutine()
@@ -37,7 +50,7 @@ namespace FruitBlast
                 foreach (var fruitHolder in _fruitHolders)
                 {
                     fruitHolder.transform.Translate(Vector3.down * (_spinSpeed * Time.deltaTime));
-                    
+
                     if (fruitHolder.transform.localPosition.y <= -fruitHolder.GetHeight() * 3f)
                     {
                         LoopFruitToTop(fruitHolder);
@@ -47,21 +60,21 @@ namespace FruitBlast
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            
+
             AlignToFinalResult();
         }
 
-        private void LoopFruitToTop(FruitHolder fruitHolder)
+        private void LoopFruitToTop(ItemHolder itemHolder)
         {
             float topPosition = GetTopFruitPosition();
-            
-            fruitHolder.transform.localPosition = new Vector3(
-                fruitHolder.transform.localPosition.x,
-                topPosition + fruitHolder.GetHeight(),
-                fruitHolder.transform.localPosition.z
+
+            itemHolder.transform.localPosition = new Vector3(
+                itemHolder.transform.localPosition.x,
+                topPosition + itemHolder.GetHeight(),
+                itemHolder.transform.localPosition.z
             );
-            
-            fruitHolder.SetFruit(_fruits[Random.Range(0, _fruits.Count)]);
+
+            itemHolder.SetFruit(_fruits[Random.Range(0, _fruits.Count)]);
         }
 
         private float GetTopFruitPosition()
@@ -75,13 +88,13 @@ namespace FruitBlast
 
             return topY;
         }
-        
+
         private void AlignToFinalResult()
         {
             for (int i = 0; i < _fruitHolders.Count; i++)
             {
                 _fruitHolders[i].SetFruit(_finalResult[i % _finalResult.Count]);
-                
+
                 float spacing = _fruitHolders[i].GetHeight();
                 _fruitHolders[i].transform.localPosition = new Vector3(
                     0,
@@ -94,9 +107,9 @@ namespace FruitBlast
             StoppedSpinning?.Invoke();
         }
 
-        private List<Fruit> GenerateRandomResults()
+        private List<Item> GenerateRandomResults()
         {
-            List<Fruit> results = new List<Fruit>();
+            List<Item> results = new List<Item>();
             for (int i = 0; i < _fruitHolders.Count; i++)
             {
                 results.Add(_fruits[Random.Range(0, _fruits.Count)]);

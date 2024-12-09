@@ -11,6 +11,8 @@ namespace GameCore
 {
     public class GameController : MonoBehaviour
     {
+        [SerializeField] private GameType _gameType;
+        [SerializeField] private TMP_Text _spinsCount;
         [SerializeField] private DessertParade.LineHolder _dplineHolder;
         [SerializeField] private LineHolder _lineHolder;
         [SerializeField] private TMP_Text _playerBalance;
@@ -34,6 +36,7 @@ namespace GameCore
         private void OnEnable()
         {
             PlayerBalanceController.BalanceChanged += UpdateBalanceText;
+            PlayerBalanceController.FreeSpinsChanged += UpdateFreeSpinsText;
             _spinButton.onClick.AddListener(OnSpinClicked);
             _homeButton.onClick.AddListener(ReturnToMainScene);
 
@@ -47,6 +50,7 @@ namespace GameCore
         private void OnDisable()
         {
             PlayerBalanceController.BalanceChanged -= UpdateBalanceText;
+            PlayerBalanceController.FreeSpinsChanged -= UpdateFreeSpinsText;
             _spinButton.onClick.RemoveListener(OnSpinClicked);
             _homeButton.onClick.RemoveListener(ReturnToMainScene);
 
@@ -62,6 +66,7 @@ namespace GameCore
             _notEnoughPopup.SetActive(false);
             _playedOnce = false;
             _playerBalance.text = PlayerBalanceController.CurrentBalance.ToString();
+            _spinsCount.text = PlayerBalanceController.FreeSpinsCount.ToString();
         }
 
         private void OnSpinClicked()
@@ -102,6 +107,11 @@ namespace GameCore
             _playerBalance.text = value.ToString();
         }
 
+        private void UpdateFreeSpinsText(int value)
+        {
+            _spinsCount.text = value.ToString();
+        }
+
         private void StartSpin()
         {
             if (_lineHolder != null)
@@ -137,7 +147,6 @@ namespace GameCore
             }
 
             _spinButton.interactable = true;
-            Debug.Log(winAmount);
         }
 
         private int CalculateLineWin(List<ItemHolder> fruitHolders, int lineIndex)
@@ -150,7 +159,7 @@ namespace GameCore
             {
                 if (group.Count() >= 3)
                 {
-                    if (group.Key == Type.Bonus)
+                    if (group.Key == Type.Bonus && group.Count() >= 3)
                     {
                         _gameBonusScreen.Enable();
                     }
@@ -175,7 +184,7 @@ namespace GameCore
         private void ReturnToMainScene()
         {
             if (_playedOnce)
-                BonusProgressSaver.IncreaseFruitBlastProgress();
+                BonusProgressSaver.IncreaseProgress(_gameType);
 
             SceneManager.LoadScene("MainScene");
         }
@@ -194,4 +203,11 @@ namespace GameCore
 public class WinLine
 {
     public List<ItemHolder> ItemHolders;
+}
+
+public enum GameType
+{
+    FruitBlast,
+    DessertParade,
+    SweetJackpot
 }

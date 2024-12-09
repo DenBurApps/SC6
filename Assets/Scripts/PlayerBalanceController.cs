@@ -16,11 +16,11 @@ public static class PlayerBalanceController
     private static string _saveFilePath => Path.Combine(Application.persistentDataPath, "PlayerBalance");
     private static int _initBalance = 1000;
     private static bool IsMultiplied;
-    private static int FreeSpinsCount;
+    public static int FreeSpinsCount { get; private set; }
     public static int CurrentBalance { get; private set; }
-    
 
     public static event Action<int> BalanceChanged;
+    public static event Action<int> FreeSpinsChanged;
 
     public static void IncreaseBalance(int count)
     {
@@ -32,7 +32,14 @@ public static class PlayerBalanceController
             SaveBalanceData();
             return;
         }
-        
+
+        if (FreeSpinsCount > 0)
+        {
+            FreeSpinsCount--;
+            count = 50;
+            FreeSpinsChanged?.Invoke(FreeSpinsCount);
+        }
+
         CurrentBalance += count;
         SaveBalanceData();
         BalanceChanged?.Invoke(CurrentBalance);
@@ -44,9 +51,10 @@ public static class PlayerBalanceController
         {
             FreeSpinsCount--;
             SaveBalanceData();
+            FreeSpinsChanged?.Invoke(FreeSpinsCount);
             return;
         }
-        
+
         if (CurrentBalance - count >= 0)
         {
             CurrentBalance -= count;
@@ -72,7 +80,7 @@ public static class PlayerBalanceController
         IsMultiplied = true;
         SaveBalanceData();
     }
-    
+
     private static void LoadBalanceData()
     {
         if (File.Exists(_saveFilePath))
@@ -107,7 +115,8 @@ public static class PlayerBalanceController
     {
         try
         {
-            PlayerBalanceWrapper playerBalanceWrapper = new PlayerBalanceWrapper(CurrentBalance, IsMultiplied, FreeSpinsCount);
+            PlayerBalanceWrapper playerBalanceWrapper =
+                new PlayerBalanceWrapper(CurrentBalance, IsMultiplied, FreeSpinsCount);
             string json = JsonUtility.ToJson(playerBalanceWrapper);
 
             File.WriteAllText(_saveFilePath, json);

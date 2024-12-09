@@ -43,25 +43,29 @@ namespace DessertParade
         public void HighligthLine(int index)
         {
             if (index < 0 || index >= _lines.Length) return;
+            
+            _lines[index].color = _selectedHorizontalColor;
 
-            if (index <= 5)
+            /*if (index <= 5)
                 _lines[index].color = _selectedHorizontalColor;
             else if (index >= 6 && index < 8)
                 _lines[index].sprite = _selectedVerticalSprite;
             else
-                _lines[index].color = _selectedHorizontalColor;
+                _lines[index].color = _selectedHorizontalColor;*/
         }
 
         public void ReturnAllLinesToDefault()
         {
             for (int i = 0; i < _lines.Length; i++)
             {
-                if (i <= 5)
+                _lines[i].color = _notSelectedHorizontalColor;
+                
+                /*if (i <= 5)
                     _lines[i].color = _notSelectedHorizontalColor;
                 else if (i >= 6 && i < 8)
                     _lines[i].sprite = _defaultVerticalSprite;
                 else
-                    _lines[i].color = _notSelectedHorizontalColor;
+                    _lines[i].color = _notSelectedHorizontalColor;*/
             }
         }
 

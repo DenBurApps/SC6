@@ -46,35 +46,52 @@ public static class BonusProgressSaver
         IsSweetJackpot10Collected = true;
         Save();
     }
-    
-    public static void IncreaseSweetJackpotProgress()
-    {
-        if (SweetJackpot5Progress >= 5 && IsSweetJackpot5Collected) return;
-        if (SweetJackpot10Progress >= 10 && IsSweetJackpot10Collected) return;
 
-        SweetJackpot5Progress++;
+    public static void IncreaseProgress(GameType gameType)
+    {
+        switch (gameType)
+        {
+            case GameType.DessertParade:
+                IncreaseDessertParadeProgress();
+                break;
+            case GameType.FruitBlast:
+                IncreaseFruitBlastProgress();
+                break;
+            case GameType.SweetJackpot:
+                IncreaseSweetJackpotProgress();
+                break;
+        }
+    }
+
+    private static void IncreaseSweetJackpotProgress()
+    {
+        if (SweetJackpot5Progress >= 5 && SweetJackpot10Progress >= 10) return;
+
+        if (!IsSweetJackpot5Collected)
+            SweetJackpot5Progress++;
+        
         SweetJackpot10Progress++;
         Save();
     }
 
-    public static void IncreaseFruitBlastProgress()
+    private static void IncreaseFruitBlastProgress()
     {
-        if(FruitBlast10Progress >= 10)
+        if (FruitBlast10Progress >= 10)
             return;
 
         FruitBlast10Progress++;
         Save();
     }
 
-    public static void IncreaseDessertParadeProgress()
+    private static void IncreaseDessertParadeProgress()
     {
-        if(DessertParade5Progress >= 5)
+        if (DessertParade5Progress >= 5)
             return;
 
         DessertParade5Progress++;
         Save();
     }
-    
+
     private static void Load()
     {
         try
@@ -110,8 +127,8 @@ public static class BonusProgressSaver
         try
         {
             var data = new BonusInfo(
-                SweetJackpot5Progress, 
-                FruitBlast10Progress, 
+                SweetJackpot5Progress,
+                FruitBlast10Progress,
                 DessertParade5Progress,
                 SweetJackpot10Progress,
                 IsSweetJackpot5Collected,
@@ -153,8 +170,10 @@ public static class BonusProgressSaver
         public bool IsDessertParade5Collected;
         public bool IsSweetJackpot10Collected;
 
-        public BonusInfo(int sweetJackpot5Progress, int fruitBlast10Progress, int dessertParade5Progress, int sweetJackpot10Progress, 
-            bool isSweetJackpot5Collected, bool isFruitBlast10Collected, bool isDessertParade5Collected, bool isSweetJackpot10Collected)
+        public BonusInfo(int sweetJackpot5Progress, int fruitBlast10Progress, int dessertParade5Progress,
+            int sweetJackpot10Progress,
+            bool isSweetJackpot5Collected, bool isFruitBlast10Collected, bool isDessertParade5Collected,
+            bool isSweetJackpot10Collected)
         {
             SweetJackpot5Progress = sweetJackpot5Progress;
             FruitBlast10Progress = fruitBlast10Progress;
@@ -166,6 +185,4 @@ public static class BonusProgressSaver
             IsSweetJackpot10Collected = isSweetJackpot10Collected;
         }
     }
-
 }
-

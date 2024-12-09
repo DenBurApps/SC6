@@ -143,11 +143,10 @@ public class BonusScreen : MonoBehaviour
 
     private void SetProgress()
     {
-        for (int i = 0; i < _bonuses.Count; i++)
+        for (int i = 0; i < _bonusDatas.Count; i++)
         {
+            Debug.Log(_progressTexts[i].text = $"{_bonusDatas[i].Progress}/{_bonusDatas[i].TargetProgress}");
             _progressTexts[i].text = $"{_bonusDatas[i].Progress}/{_bonusDatas[i].TargetProgress}";
-            _progressImages[i].fillAmount =
-                (float)_bonusDatas[i].Progress / _bonusDatas[i].TargetProgress;
             _progressImages[i].color = _bonusDatas[i].Progress >= _bonusDatas[i].TargetProgress
                 ? _completeColor
                 : _notCompleteColor;

@@ -11,7 +11,6 @@ public static class PlayerBalanceController
         IsMultiplied = false;
         FreeSpinsCount = 0;
         LoadBalanceData();
-        Debug.Log(IsMultiplied);
     }
 
     private static string _saveFilePath => Path.Combine(Application.persistentDataPath, "PlayerBalance");
@@ -62,9 +61,9 @@ public static class PlayerBalanceController
         SaveBalanceData();
     }
 
-    public static void AddFreeSpins()
+    public static void AddFreeSpins(int spins)
     {
-        FreeSpinsCount += 10;
+        FreeSpinsCount += spins;
         SaveBalanceData();
     }
 

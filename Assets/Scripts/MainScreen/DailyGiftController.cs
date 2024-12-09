@@ -15,14 +15,11 @@ public class DailyGiftController : MonoBehaviour
     [SerializeField] private Sprite _notCollectedSprite;
     [SerializeField] private List<DailyGift> _dailyGifts;
     [SerializeField] private ScreenVisabilityHandler _screenVisabilityHandler;
+    [SerializeField] private AudioSource _giftSound;
     
     private string _savePath;
 
     private DateTime _lastCollectedDate;
-    
-    public event Action SpinsCollected;
-    public event Action MultiplyCollected;
-
     public bool GiftCollected { get; private set; }
 
     private void Awake()
@@ -114,6 +111,7 @@ public class DailyGiftController : MonoBehaviour
         _screenVisabilityHandler.EnableScreen();
         var randomGift = Random.Range(0, _dailyGifts.Count);
         _dailyGifts[randomGift].gameObject.SetActive(true);
+        _giftSound.Play();
     }
 
     private void OnGiftCollected(GiftType type)
@@ -124,11 +122,11 @@ public class DailyGiftController : MonoBehaviour
                 PlayerBalanceController.IncreaseBalance(100);
                 break;
             case GiftType.Multiply:
-                MultiplyCollected?.Invoke();
+                PlayerBalanceController.SetMultiplier();
                 break;
             case GiftType.GoldSpins:
                 PlayerBalanceController.IncreaseBalance(100);
-                SpinsCollected?.Invoke();
+                PlayerBalanceController.AddFreeSpins(10);
                 break;
         }
 

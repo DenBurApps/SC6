@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(ScreenVisabilityHandler))]
 public class MainScreen : MonoBehaviour
@@ -41,6 +42,31 @@ public class MainScreen : MonoBehaviour
     {
         BonusClicked?.Invoke();
         _screenVisabilityHandler.DisableScreen();
+    }
+
+    public void DisableScreen()
+    {
+        _screenVisabilityHandler.DisableScreen();
+    }
+
+    public void EnableScreen()
+    {
+        _screenVisabilityHandler.EnableScreen();
+    }
+
+    public void OpenFruitBlast()
+    {
+        SceneManager.LoadScene("FruitBlastScene");
+    }
+
+    public void OpenDessertParade()
+    {
+        SceneManager.LoadScene("DessertParadeScene");
+    }
+
+    public void OpenSweetJackpot()
+    {
+        SceneManager.LoadScene("SweetJackpotScene");
     }
 
     private void SetBalanceText(int value)

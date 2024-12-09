@@ -11,6 +11,7 @@ public class GameBonusScreen : MonoBehaviour
     [SerializeField] private GameObject _buttonsPlane;
     [SerializeField] private Button[] _buttons;
     [SerializeField] private GameBonusPlane[] _gameBonusPlanes;
+    [SerializeField] private AudioSource _bonusSound;
 
     private ScreenVisabilityHandler _screenVisabilityHandler;
 
@@ -65,6 +66,7 @@ public class GameBonusScreen : MonoBehaviour
     {
         int randomIndex = Random.Range(0, _gameBonusPlanes.Length);
         _gameBonusPlanes[randomIndex].gameObject.SetActive(true);
+        _bonusSound.Play();
         _buttonsPlane.SetActive(false);
     }
 
@@ -79,7 +81,7 @@ public class GameBonusScreen : MonoBehaviour
                 PlayerBalanceController.SetMultiplier();
                 break;
             case GameBonusType.FreeSpins:
-                PlayerBalanceController.AddFreeSpins();
+                PlayerBalanceController.AddFreeSpins(10);
                 break;
         }
         

@@ -19,6 +19,7 @@ public class BonusScreen : MonoBehaviour
     [SerializeField] private ScreenVisabilityHandler _bonusHolder;
     [SerializeField] private List<Bonus> _bonuses;
     [SerializeField] private MainScreen _mainScreen;
+    [SerializeField] private AudioSource _bonusSound;
 
     private ScreenVisabilityHandler _screenVisabilityHandler;
     private string _savePath;
@@ -116,7 +117,6 @@ public class BonusScreen : MonoBehaviour
         bonus.IsCollected = true;
 
         _bonusHolder.EnableScreen();
-        
 
         switch (bonusIndex)
         {
@@ -167,7 +167,7 @@ public class BonusScreen : MonoBehaviour
                 break;
             case BonusType.GoldSpins:
                 PlayerBalanceController.IncreaseBalance(100);
-                //3 free spins
+                PlayerBalanceController.AddFreeSpins(3);
                 break;
         }
     }
